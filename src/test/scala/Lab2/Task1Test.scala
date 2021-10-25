@@ -11,6 +11,5 @@ class Test_MUX_5to1 extends FreeSpec with ChiselScalatestTester{
         a.io.s1.poke(true.B)
         a.io.s2.poke(false.B)
         a.io.out.expect(16.U)}
-        //a.clock.step(0)
     }
 }
