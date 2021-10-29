@@ -15,8 +15,13 @@ class TestBranchModule extends FreeSpec with ChiselScalatestTester{
             val br = Random.nextBoolean()
             val in1 = Random.nextInt()
             val in2 = Random.nextInt()
+            val in1U: BigInt = if(in1 < 0){(BigInt(0xFFFFFFFFL) + in1 + 1) & 0xFFFFFFFFL}
+                                else{in1 & 0xFFFFFFFFL}
+            val in2U: BigInt = if(in2 < 0){(BigInt(0xFFFFFFFFL) + in2 + 1) & 0xFFFFFFFFL}
+                                else{in2 & 0xFFFFFFFFL}
+            var out = false.B
             if(br == true){
-                val out = func3Index match{
+                out = func3Index match{
                     case 0 => if(in1 == in2){true.B}
                                 else{false.B}
                     case 1 => if(in1 != in2){true.B}
@@ -25,13 +30,11 @@ class TestBranchModule extends FreeSpec with ChiselScalatestTester{
                                 else{false.B}
                     case 3 => if(in1 >= in2){true.B}
                                 else{false.B}
-                    case 4 => if(in1.asUInt < in2.asUInt){true.B}
+                    case 4 => if(in1U < in2U){true.B}
                                 else{false.B}
-                    case 5 => if(in1.asUInt >= in2.asUInt){true.B}
+                    case 5 => if(in1U >= in2U){true.B}
                                 else{false.B}
                 }
-            }else{
-                val out = false.B
             }
             a.io.fnct3.poke(func3)
             a.io.branch.poke(br.B)

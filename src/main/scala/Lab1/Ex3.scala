@@ -5,6 +5,7 @@ class ParamCounter(size: Int, maxValue: Int) extends Module{
     val io = IO(new Bundle{
         val result = Output(Bool())
         })
+    var result = 0.B
     // 'genCounter' with counter size 'n'
     def genCounter(n: Int, max: Int) = {
         val count = RegInit(0.U(n.W))
@@ -17,5 +18,8 @@ class ParamCounter(size: Int, maxValue: Int) extends Module{
     }
     // genCounter instantiation
     val counter1 = genCounter(size, maxValue)
-    io.result := counter1(size - 1)
+    when(counter1 === maxValue.asUInt){
+        result = 1.B
+    }
+    io.result := result
 }
