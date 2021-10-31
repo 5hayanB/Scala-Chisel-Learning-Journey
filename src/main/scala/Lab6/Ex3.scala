@@ -1,35 +1,38 @@
-// package Lab6
+package Lab6
 
-// import chisel3._
-// import chisel3.util._
+import chisel3._
+import chisel3.util._
 
-// class TwoShotTimerIO extends Bundle{
-//     val din = Input(UInt(3.W))
-//     val onTimer = Output(UInt(1.W))
-//     val offTimer = Output(UInt(1.W))
-// }
-// class TwoShotTimer extends Module{
-//     val io = IO(new TwoShotTimerIO())
-//     val onTimer = RegInit(0.U(1.W))
-//     val offTimer = RegInit(1.U(1.W))
-//     val reload = RegInit(0.U(1.W))
-//     val timerCount = RegInit(0.U(3.W))
-//     val done = timerCount === 0.U
-//     val next = WireInit(0.U)
+class TwoShotTimer(start: Int) extends Module{
+    val io = IO(new Bundle{
+        val offTimer = Output(Bool())
+        val onTimer = Output(Bool())
+    })
+    val timer = RegInit(0.U(3.W))
+    val max = start.U
+    val chkpoint = RegInit(start.U(3.W))
+    var cycle = 0.U
 
-//     reload := Mux(timerCount === 0.U, 1.B, 0.B)
-//     when((reload & offTimer).asBool){
-//         next := io.din
-//         offTimer := 0.U
-//         onTimer := 1.U
-//     }.elsewhen((reload & onTimer).asBool){
-//         next := io.din
-//         offTimer := 1.U
-//         onTimer := 0.U
-//     }.elsewhen(!done){
-//         next := timerCount - 1.U
-//     }
-//     io.offTimer := offTimer
-//     io.onTimer := onTimer
-//     timerCount := next
-// }
+    when((timer =/= 0.U) && (timer =/= max)){
+        when(chkpoint === max){
+            timer := timer + 1.U
+            io.offTimer := 1.B
+            io.onTimer := 0.B
+        }.otherwise{
+            timer := timer - 1.U
+            io.offTimer := 0.B
+            io.onTimer := 1.B
+        }
+    }.elsewhen(timer === 0.U){
+        timer := timer + 1.U
+        io.offTimer := 1.B
+        io.onTimer := 0.B
+        chkpoint := max
+        cycle = cycle + 1.U
+    }.otherwise{
+        timer := timer - 1.U
+        io.offTimer := 0.B
+        io.onTimer := 1.B
+        chkpoint := 0.U
+    }
+}

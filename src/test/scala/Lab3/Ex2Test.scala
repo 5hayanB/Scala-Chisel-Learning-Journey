@@ -7,9 +7,9 @@ import org.scalatest._
 class TestALU extends FreeSpec with ChiselScalatestTester{
     "Exercise 2 ALU" in{
         test(new ALU()){x =>
-        x.io.rs1.poke(2.U)
-        x.io.rs2.poke(2.U)
-        x.io.aluOp.poke(1.U)
-        x.io.out.expect(8.U)}
+        x.io.rs1.poke(-3.S)
+        x.io.rs2.poke(1.S)
+        x.io.aluOp.poke(13.U)
+        x.io.out.expect(-2.S)}
     }
 }
