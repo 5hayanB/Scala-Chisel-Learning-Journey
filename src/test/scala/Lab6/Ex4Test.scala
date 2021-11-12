@@ -17,6 +17,8 @@ class TestQueue extends FreeSpec with ChiselScalatestTester{
         z.io.out.bits.expect(3.U)}
     }
 }
+
+// SIMPLE QUEUE TEST:-
 // class TestQueue extends FreeSpec with ChiselScalatestTester{
 //     "Queue Test" in{
 //         test(new MyQueue()){z =>
