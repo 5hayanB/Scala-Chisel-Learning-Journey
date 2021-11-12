@@ -17,6 +17,7 @@ class MyQueue extends Module{
 }
 
 // SIMPLE QUEUE:-
+// 
 // class MyQueue extends Module{
 //     val io = IO(new Bundle{
 //         val in = Flipped(Decoupled(UInt(8.W)))  // Valid = Input, Ready = Output, Bits = Input
